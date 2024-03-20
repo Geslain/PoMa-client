@@ -1,4 +1,14 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npm test
+containerName=54q4r4-client
+isRunning="$(docker ps -q -f name=$containerName)"
+
+if [ -z "$isRunning" ]
+then
+  echo "\n\033[31mPlease start docker container ($containerName) so test can run !\033[0m\n"
+  exit 1
+fi
+
+npx lint-staged
+docker exec 54q4r4-client yarn test
