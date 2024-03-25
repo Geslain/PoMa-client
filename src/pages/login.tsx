@@ -7,7 +7,7 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const callbackUrl = searchParams.get("callbackUrl");
+  const callbackUrl = searchParams?.get("callbackUrl") || "/"
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -21,7 +21,7 @@ export default function LoginPage() {
       password,
       // The page where you want to redirect to after a
       // successful login
-      callbackUrl: `${window.location.origin}${callbackUrl || "/"}`,
+      callbackUrl: `${window.location.origin}${callbackUrl}`,
     });
     const handleError = (err: string) => console.log(err);
 

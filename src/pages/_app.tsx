@@ -6,7 +6,7 @@ import { ReactNode } from "react";
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
-}: AppProps & { Component: AppProps["Component"] & { getLayout?: Function } }) {
+}: AppProps & { Component: AppProps["Component"] & { getLayout?: (page: ReactNode) => ReactNode } }) {
   const getLayout =
     Component.getLayout ?? ((page: ReactNode) => <Layout>{page}</Layout>);
   return (
