@@ -11,9 +11,11 @@ import {
 import useProjects from "@/hooks/useProjects";
 import { useEffect, useState } from "react";
 import Project from "@/types/project";
+import { useRouter } from "next/router";
 
 export default function ProjectsPage() {
   const { getProjects } = useProjects();
+  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
@@ -21,6 +23,10 @@ export default function ProjectsPage() {
       if (p) setProjects(p);
     });
   }, [getProjects]);
+
+  function handleRowClick(id: string) {
+    router.push(`/projects/${id}`);
+  }
 
   return (
     <>
@@ -40,8 +46,10 @@ export default function ProjectsPage() {
           <TableBody>
             {projects.map((project) => (
               <TableRow
+                hover
                 key={project.name}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                onClick={() => handleRowClick(project._id)}
               >
                 <TableCell align="left">{project.name}</TableCell>
                 <TableCell align="left">{`${project.owner.firstname} ${project.owner.lastname}`}</TableCell>
