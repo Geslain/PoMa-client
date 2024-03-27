@@ -1,7 +1,7 @@
-import Entity from "@/pages/types/entity";
+import Entity from "@/types/entity";
 
 export default interface User extends Entity {
-  firstname: string
-  lastname: string,
-  email: string
+  firstname: string;
+  lastname: string;
+  email: string;
 }

@@ -1,6 +1,6 @@
-import Entity from "@/pages/types/entity";
+import Entity from "@/types/entity";
 
 export default interface Task extends Entity {
-  name: string,
-  description: string,
+  name: string;
+  description: string;
 }
