@@ -41,11 +41,5 @@
   },
   "resolutions": {
     "string-width": "4.2.3"
-  },
-  "lint-staged": {
-    "src/**/*.tsx": [
-      "yarn lint --file",
-      "npx prettier --write"
-    ]
   }
 }
