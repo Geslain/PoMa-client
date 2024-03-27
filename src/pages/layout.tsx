@@ -53,7 +53,10 @@ export default function Layout({ children }: { children: ReactNode }) {
               </ul>
             </div>
           </aside>
-          <main role="main" className="container w-full sm:w-2/3 md:w-3/4 p-8">
+          <main
+            role="main"
+            className="container w-full sm:w-2/3 md:w-3/4 p-8 overflow-scroll h-full"
+          >
             {children}
           </main>
         </div>
