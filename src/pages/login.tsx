@@ -1,4 +1,5 @@
 import React, { FormEvent, ReactNode } from "react";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
@@ -35,10 +36,14 @@ export default function LoginPage() {
   return (
     <div className={"h-full w-full flex"}>
       <Card className={"w-1/3 p-8 m-auto"}>
-        <img
+        <Image
+          alt={"Logo"}
+          width={400}
+          height={200}
           src={
             "https://cdn.jaimelesstartups.fr/wp-content/uploads/2021/09/Logo-Saqara.jpg"
           }
+          className={"m-auto"}
         />
         <form onSubmit={handleSubmit}>
           <FormControl fullWidth className={"mb-8"} required>
