@@ -3,6 +3,8 @@ import { AppProps } from "next/app";
 import Layout from "@/pages/layout";
 import { ReactNode } from "react";
 import "./globals.css";
+import { Bounce, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function App({
   Component,
@@ -16,6 +18,19 @@ export default function App({
     Component.getLayout ?? ((page: ReactNode) => <Layout>{page}</Layout>);
   return (
     <SessionProvider session={session}>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       {getLayout(<Component {...pageProps} />)}
     </SessionProvider>
   );
