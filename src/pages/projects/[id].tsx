@@ -4,6 +4,7 @@ import {
   CardContent,
   Divider,
   FormControl,
+  IconButton,
   Input,
   InputLabel,
   List,
@@ -16,21 +17,48 @@ import { useEffect, useState } from "react";
 import Project from "@/types/project";
 import { useRouter } from "next/router";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function ProjectsPage() {
   const router = useRouter();
-  const projectId = router?.query?.id;
-  const { getProject } = useProjects();
+  const projectId = router?.query?.id as string;
+  const { getProject, addProjectTask, deleteProjectTask } = useProjects();
   const [project, setProject] = useState<Project>();
 
   useEffect(() => {
-    if (projectId && typeof projectId === "string")
+    if (projectId)
       getProject(projectId).then((p) => {
         if (p) setProject(p);
       });
   }, [getProject, projectId]);
 
   if (!project) return null;
+
+  function handleAddTask() {
+    const task = {
+      name: "test name",
+      description: "test description",
+    };
+
+    addProjectTask(projectId as string, task.name, task.description).then(
+      () => {
+        // TODO handle promise resolution
+        getProject(projectId).then((p) => {
+          if (p) setProject(p);
+        });
+      },
+    );
+  }
+
+  function handleDeleteTask(taskId: string) {
+    // TODO Add confirmation modal
+    deleteProjectTask(projectId as string, taskId).then(() => {
+      // TODO handle promise resolution
+      getProject(projectId).then((p) => {
+        if (p) setProject(p);
+      });
+    });
+  }
 
   const { name, owner, tasks } = project;
   const { firstname, lastname } = owner;
@@ -48,7 +76,18 @@ export default function ProjectsPage() {
         <List sx={{ width: "100%" }}>
           {tasks.map((task) => (
             <>
-              <ListItem alignItems="flex-start">
+              <ListItem
+                alignItems="flex-start"
+                secondaryAction={
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => handleDeleteTask(task._id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                }
+              >
                 <ListItemText
                   primary={task.name}
                   secondary={task.description}
@@ -66,7 +105,9 @@ export default function ProjectsPage() {
               <InputLabel htmlFor="descripiton">Description</InputLabel>
               <Input multiline id="descripiton" />
             </FormControl>
-            <Button startIcon={<AddIcon />}>Add a task</Button>
+            <Button startIcon={<AddIcon />} onClick={handleAddTask}>
+              Add a task
+            </Button>
           </ListItem>
         </List>
       </CardContent>

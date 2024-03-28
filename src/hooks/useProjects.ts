@@ -16,6 +16,7 @@ const useProjects = () => {
       await fetchData(`${url}${projectUrl}`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
+          "content-type": "application/json",
         },
         ...init,
       })
@@ -38,7 +39,27 @@ const useProjects = () => {
     [accessToken],
   );
 
-  return { getProjects, getProject };
+  const addProjectTask = useCallback(
+    (projectId: string, name: string, description: string) =>
+      fetchProject(`/${projectId}/tasks`, {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          description,
+        }),
+      }),
+    [accessToken],
+  );
+
+  const deleteProjectTask = useCallback(
+    (projectId: string, taskId: string) =>
+      fetchProject(`/${projectId}/tasks/${taskId}`, {
+        method: "DELETE",
+      }),
+    [accessToken],
+  );
+
+  return { getProjects, getProject, addProjectTask, deleteProjectTask };
 };
 
 export default useProjects;
