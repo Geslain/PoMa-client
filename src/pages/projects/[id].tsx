@@ -17,6 +17,7 @@ import AddTaskForm from "@/pages/projects/components/AddTaskForm";
 import AddMemberForm from "@/pages/projects/components/AddMemberForm";
 import Task from "@/types/task";
 import User from "@/types/user";
+import EditableTitle from "@/components/EditableTitle";
 
 export default function ProjectsPage() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function ProjectsPage() {
     deleteProjectTask,
     addProjectMember,
     deleteProjectMember,
+    editProject,
   } = useProjects();
   const [project, setProject] = useState<Project>();
 
@@ -44,7 +46,6 @@ export default function ProjectsPage() {
     description,
   }: Pick<Task, "name" | "description">) {
     addProjectTask(projectId as string, name, description).then((p) => {
-      // TODO handle promise resolution
       setProject(p);
     });
   }
@@ -52,14 +53,12 @@ export default function ProjectsPage() {
   function handleDeleteTask(taskId: string) {
     // TODO Add confirmation modal
     deleteProjectTask(projectId as string, taskId).then((p) => {
-      // TODO handle promise resolution
       setProject(p);
     });
   }
 
   function handleAddMember({ _id }: Pick<User, "_id">) {
     addProjectMember(projectId as string, _id).then((p) => {
-      // TODO handle promise resolution
       setProject(p);
     });
   }
@@ -67,7 +66,6 @@ export default function ProjectsPage() {
   function handleDeleteMember(memberId: string) {
     // TODO Add confirmation modal
     deleteProjectMember(projectId as string, memberId).then((p) => {
-      // TODO handle promise resolution
       setProject(p);
     });
   }
@@ -76,12 +74,20 @@ export default function ProjectsPage() {
   const { firstname, lastname } = owner;
   // List of user you can add as member : all users - members - owner
 
+  function handleTitleChange(value: string) {
+    editProject(projectId, { name: value }).then((p) => {
+      setProject(p);
+    });
+  }
+
   return (
     <Card>
       <CardContent>
-        <Typography variant="h1" gutterBottom>
-          Project: {name}
-        </Typography>
+        <EditableTitle
+          variant="h1"
+          text={`${name}`}
+          onSubmit={handleTitleChange}
+        />
         <Typography className={"italic mb-10"}>
           Created by: {firstname} {lastname}
         </Typography>

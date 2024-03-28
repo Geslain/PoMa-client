@@ -2,6 +2,7 @@ import fetchData from "@/helpers/fetchData";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
 import { toast } from "react-toastify";
+import Project from "@/types/project";
 
 const useProjects = () => {
   const url = "/projects";
@@ -36,6 +37,15 @@ const useProjects = () => {
     (id: string) =>
       fetchProject(`/${id}`, {
         method: "GET",
+      }),
+    [accessToken],
+  );
+
+  const editProject = useCallback(
+    (id: string, data: Partial<Project>) =>
+      fetchProject(`/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(data),
       }),
     [accessToken],
   );
@@ -100,6 +110,7 @@ const useProjects = () => {
   return {
     getProjects,
     getProject,
+    editProject,
     addProjectTask,
     deleteProjectTask,
     addProjectMember,
