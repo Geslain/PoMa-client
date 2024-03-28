@@ -3,10 +3,12 @@ import { useSession } from "next-auth/react";
 import { useCallback } from "react";
 import { toast } from "react-toastify";
 import Project from "@/types/project";
+import { useRouter } from "next/router";
 
 const useProjects = () => {
   const url = "/projects";
   const session = useSession();
+  const router = useRouter();
   const accessToken = session.data?.user.accessToken;
 
   const fetchProject = async function (
@@ -14,15 +16,21 @@ const useProjects = () => {
     init: Parameters<typeof fetch>[1],
   ) {
     if (!accessToken) return null;
-    return await (
-      await fetchData(`${url}${projectUrl}`, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-          "content-type": "application/json",
-        },
-        ...init,
-      })
-    ).json();
+    const res = await fetchData(`${url}${projectUrl}`, {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+        "content-type": "application/json",
+      },
+      ...init,
+    });
+
+    if (res.status === 404) {
+      toast("This project does not exists 🙅‍");
+      router.push("/projects");
+      return;
+    }
+
+    return await res.json();
   };
 
   const getProjects = useCallback(
