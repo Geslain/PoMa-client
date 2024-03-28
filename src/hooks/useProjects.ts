@@ -1,6 +1,7 @@
 import fetchData from "@/helpers/fetchData";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
+import { toast } from "react-toastify";
 
 const useProjects = () => {
   const url = "/projects";
@@ -40,22 +41,31 @@ const useProjects = () => {
   );
 
   const addProjectTask = useCallback(
-    (projectId: string, name: string, description: string) =>
-      fetchProject(`/${projectId}/tasks`, {
+    async (projectId: string, name: string, description: string) => {
+      const res = await fetchProject(`/${projectId}/tasks`, {
         method: "POST",
         body: JSON.stringify({
           name,
           description,
         }),
-      }),
+      });
+      toast("Task has been added with great success ! 🦄");
+
+      return res;
+    },
     [accessToken],
   );
 
   const deleteProjectTask = useCallback(
-    (projectId: string, taskId: string) =>
-      fetchProject(`/${projectId}/tasks/${taskId}`, {
+    async (projectId: string, taskId: string) => {
+      const res = await fetchProject(`/${projectId}/tasks/${taskId}`, {
         method: "DELETE",
-      }),
+      });
+
+      toast("Task has been deleted with great success ! 💥");
+
+      return res;
+    },
     [accessToken],
   );
 
