@@ -11,8 +11,6 @@ export default function LoginPage() {
 
   const callbackUrl = searchParams?.get("callbackUrl") || "/projects";
 
-  console.log(callbackUrl);
-
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
