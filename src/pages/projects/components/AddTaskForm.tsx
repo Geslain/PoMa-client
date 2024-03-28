@@ -58,10 +58,10 @@ export default function AddTaskForm({ onSubmit }: Props) {
         required
         error={formErrors["description"]}
       >
-        <InputLabel htmlFor="descripiton">Description</InputLabel>
+        <InputLabel htmlFor="description">Description</InputLabel>
         <Input
           multiline
-          id="descripiton"
+          id="description"
           onChange={handleTaskDescriptionChange}
           value={taskDescription}
         />
