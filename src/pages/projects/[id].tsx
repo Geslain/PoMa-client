@@ -1,28 +1,33 @@
 import {
-  Button,
   Card,
   CardContent,
   Divider,
-  FormControl,
   IconButton,
-  Input,
-  InputLabel,
   List,
   ListItem,
   ListItemText,
   Typography,
 } from "@mui/material";
 import useProjects from "@/hooks/useProjects";
-import { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Project from "@/types/project";
 import { useRouter } from "next/router";
-import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddTaskForm from "@/pages/projects/components/AddTaskForm";
+import AddMemberForm from "@/pages/projects/components/AddMemberForm";
+import Task from "@/types/task";
+import User from "@/types/user";
 
 export default function ProjectsPage() {
   const router = useRouter();
   const projectId = router?.query?.id as string;
-  const { getProject, addProjectTask, deleteProjectTask } = useProjects();
+  const {
+    getProject,
+    addProjectTask,
+    deleteProjectTask,
+    addProjectMember,
+    deleteProjectMember,
+  } = useProjects();
   const [project, setProject] = useState<Project>();
 
   useEffect(() => {
@@ -34,34 +39,42 @@ export default function ProjectsPage() {
 
   if (!project) return null;
 
-  function handleAddTask() {
-    const task = {
-      name: "test name",
-      description: "test description",
-    };
-
-    addProjectTask(projectId as string, task.name, task.description).then(
-      () => {
-        // TODO handle promise resolution
-        getProject(projectId).then((p) => {
-          if (p) setProject(p);
-        });
-      },
-    );
+  function handleAddTask({
+    name,
+    description,
+  }: Pick<Task, "name" | "description">) {
+    addProjectTask(projectId as string, name, description).then((p) => {
+      // TODO handle promise resolution
+      setProject(p);
+    });
   }
 
   function handleDeleteTask(taskId: string) {
     // TODO Add confirmation modal
-    deleteProjectTask(projectId as string, taskId).then(() => {
+    deleteProjectTask(projectId as string, taskId).then((p) => {
       // TODO handle promise resolution
-      getProject(projectId).then((p) => {
-        if (p) setProject(p);
-      });
+      setProject(p);
     });
   }
 
-  const { name, owner, tasks } = project;
+  function handleAddMember({ _id }: Pick<User, "_id">) {
+    addProjectMember(projectId as string, _id).then((p) => {
+      // TODO handle promise resolution
+      setProject(p);
+    });
+  }
+
+  function handleDeleteMember(memberId: string) {
+    // TODO Add confirmation modal
+    deleteProjectMember(projectId as string, memberId).then((p) => {
+      // TODO handle promise resolution
+      setProject(p);
+    });
+  }
+
+  const { name, owner, tasks, members } = project;
   const { firstname, lastname } = owner;
+  // List of user you can add as member : all users - members - owner
 
   return (
     <Card>
@@ -75,7 +88,7 @@ export default function ProjectsPage() {
         <Typography variant="h3">Tasks</Typography>
         <List sx={{ width: "100%" }}>
           {tasks.map((task) => (
-            <>
+            <Fragment key={task._id}>
               <ListItem
                 alignItems="flex-start"
                 secondaryAction={
@@ -94,20 +107,40 @@ export default function ProjectsPage() {
                 ></ListItemText>
               </ListItem>
               <Divider variant="inset" component="li" />
-            </>
+            </Fragment>
           ))}
           <ListItem className={"flex flex-col"} alignItems={"flex-start"}>
-            <FormControl className={"my-6"}>
-              <InputLabel htmlFor="name">Name</InputLabel>
-              <Input id="name" />
-            </FormControl>
-            <FormControl fullWidth className={"mb-8"}>
-              <InputLabel htmlFor="descripiton">Description</InputLabel>
-              <Input multiline id="descripiton" />
-            </FormControl>
-            <Button startIcon={<AddIcon />} onClick={handleAddTask}>
-              Add a task
-            </Button>
+            <AddTaskForm onSubmit={handleAddTask} />
+          </ListItem>
+        </List>
+        <Typography variant="h3">Members</Typography>
+        <List sx={{ width: "100%" }}>
+          {members.map(({ _id, firstname, lastname }) => (
+            <Fragment key={_id}>
+              <ListItem
+                alignItems="flex-start"
+                secondaryAction={
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => handleDeleteMember(_id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                }
+              >
+                <ListItemText
+                  primary={`${firstname} ${lastname}`}
+                ></ListItemText>
+              </ListItem>
+              <Divider variant="inset" component="li" />
+            </Fragment>
+          ))}
+          <ListItem className={"flex flex-col"} alignItems={"flex-start"}>
+            <AddMemberForm
+              onSubmit={handleAddMember}
+              existingMembers={members.concat(owner)}
+            />
           </ListItem>
         </List>
       </CardContent>

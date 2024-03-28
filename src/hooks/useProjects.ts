@@ -69,7 +69,42 @@ const useProjects = () => {
     [accessToken],
   );
 
-  return { getProjects, getProject, addProjectTask, deleteProjectTask };
+  const addProjectMember = useCallback(
+    async (projectId: string, memberId: string) => {
+      const res = await fetchProject(`/${projectId}/members`, {
+        method: "POST",
+        body: JSON.stringify({
+          _id: memberId,
+        }),
+      });
+      toast("Member has been added with great success ! 👩‍🦰/🧑‍🦰");
+
+      return res;
+    },
+    [accessToken],
+  );
+
+  const deleteProjectMember = useCallback(
+    async (projectId: string, memberId: string) => {
+      const res = await fetchProject(`/${projectId}/members/${memberId}`, {
+        method: "DELETE",
+      });
+
+      toast("Member has been deleted with great success ! 👋");
+
+      return res;
+    },
+    [accessToken],
+  );
+
+  return {
+    getProjects,
+    getProject,
+    addProjectTask,
+    deleteProjectTask,
+    addProjectMember,
+    deleteProjectMember,
+  };
 };
 
 export default useProjects;
