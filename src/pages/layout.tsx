@@ -5,6 +5,8 @@ import { Button } from "@mui/material";
 import FolderIcon from "@mui/icons-material/Folder";
 import GroupIcon from "@mui/icons-material/Group";
 import PersonIcon from "@mui/icons-material/Person";
+import { ToastContainer, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const session = useSession();
@@ -15,6 +17,19 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       <div className="h-full">
         <div className="flex flex-row flex-wrap h-full">
           <aside className="w-full h-full sm:w-1/3 md:w-1/4 px-2 shadow">
