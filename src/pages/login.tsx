@@ -1,13 +1,17 @@
-import { FormEvent, ReactNode } from "react";
+import React, { FormEvent, ReactNode } from "react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import { Button, Card, FormControl, Input, InputLabel } from "@mui/material";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const callbackUrl = searchParams?.get("callbackUrl") || "/";
+  const callbackUrl = searchParams?.get("callbackUrl") || "/projects";
+
+  console.log(callbackUrl);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -22,19 +26,35 @@ export default function LoginPage() {
       // The page where you want to redirect to after a
       // successful login
       callbackUrl: `${window.location.origin}${callbackUrl}`,
+      redirect: false,
     });
-    const handleError = (err: string) => console.log(err);
 
-    if (res?.error) handleError(res.error);
-    if (res?.url) router.push(res.url);
+    if (res?.error === "CredentialsSignin" && res.status === 401) {
+      toast("Wrong email / password ❌");
+    } else if (res?.url) router.push(res.url);
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="email" name="email" placeholder="Email" required />
-      <input type="password" name="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
+    <div className={"h-full w-full flex"}>
+      <Card className={"w-1/3 p-8 m-auto"}>
+        <img
+          src={
+            "https://cdn.jaimelesstartups.fr/wp-content/uploads/2021/09/Logo-Saqara.jpg"
+          }
+        />
+        <form onSubmit={handleSubmit}>
+          <FormControl fullWidth className={"mb-8"} required>
+            <InputLabel htmlFor="email">Email</InputLabel>
+            <Input id="email" name="email" />
+          </FormControl>
+          <FormControl fullWidth className={"mb-8"} required>
+            <InputLabel htmlFor="password">Password</InputLabel>
+            <Input id="password" name="password" type={"password"} />
+          </FormControl>
+          <Button type="submit">Login</Button>
+        </form>
+      </Card>
+    </div>
   );
 }
 

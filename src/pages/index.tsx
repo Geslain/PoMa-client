@@ -1,9 +1,11 @@
-import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function Home() {
-  return (
-    <div>
-      <Link href={"/login"}>Login</Link>
-    </div>
-  );
+  const { push } = useRouter();
+
+  useEffect(() => {
+    push("/projects");
+  }, []);
+  return <p></p>;
 }

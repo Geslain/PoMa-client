@@ -27,7 +27,7 @@ export const authOptions: NextAuthOptions = {
           };
         } catch (e) {
           // Todo implement error
-          throw e;
+          return null;
         }
       },
     }),
