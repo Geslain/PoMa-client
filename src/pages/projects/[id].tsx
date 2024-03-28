@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardContent,
   Divider,
@@ -29,6 +30,7 @@ export default function ProjectsPage() {
     addProjectMember,
     deleteProjectMember,
     editProject,
+    deleteProject,
   } = useProjects();
   const [project, setProject] = useState<Project>();
 
@@ -77,6 +79,12 @@ export default function ProjectsPage() {
   function handleTitleChange(value: string) {
     editProject(projectId, { name: value }).then((p) => {
       setProject(p);
+    });
+  }
+
+  function handleDelete() {
+    deleteProject(projectId).then(() => {
+      router.push("/projects");
     });
   }
 
@@ -149,6 +157,14 @@ export default function ProjectsPage() {
             />
           </ListItem>
         </List>
+        <Button
+          startIcon={<DeleteIcon />}
+          color="error"
+          className={"float-end mb-4"}
+          onClick={handleDelete}
+        >
+          Delete Project
+        </Button>
       </CardContent>
     </Card>
   );

@@ -1,4 +1,5 @@
 import {
+  Button,
   Paper,
   Table,
   TableBody,
@@ -9,14 +10,18 @@ import {
   Typography,
 } from "@mui/material";
 import useProjects from "@/hooks/useProjects";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Project from "@/types/project";
 import { useRouter } from "next/router";
+import AddIcon from "@mui/icons-material/Add";
+import NewProjectModal from "@/pages/projects/components/NewProjectModal";
 
 export default function ProjectsPage() {
-  const { getProjects } = useProjects();
+  const { getProjects, createProject } = useProjects();
   const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
+  // State of modal
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     getProjects().then((p) => {
@@ -28,11 +33,30 @@ export default function ProjectsPage() {
     router.push(`/projects/${id}`);
   }
 
+  function handleClose() {
+    setIsOpen(false);
+  }
+
+  function handleSubmit(name: string) {
+    console.log(name);
+    createProject({ name }).then((p) => {
+      router.push(`/projects/${p._id}`);
+    });
+    setIsOpen(false);
+  }
+
+  function handleClick() {
+    setIsOpen(true);
+  }
+
   return (
     <>
       <Typography variant="h1" gutterBottom>
         Projects
       </Typography>
+      <Button startIcon={<AddIcon />} onClick={handleClick}>
+        Create project
+      </Button>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -60,6 +84,11 @@ export default function ProjectsPage() {
           </TableBody>
         </Table>
       </TableContainer>
+      <NewProjectModal
+        open={isOpen}
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+      />
     </>
   );
 }

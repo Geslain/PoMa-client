@@ -41,12 +41,34 @@ const useProjects = () => {
     [accessToken],
   );
 
+  const createProject = useCallback(
+    (data: Partial<Project>) =>
+      fetchProject("", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+    [accessToken],
+  );
+
   const editProject = useCallback(
     (id: string, data: Partial<Project>) =>
       fetchProject(`/${id}`, {
         method: "PATCH",
         body: JSON.stringify(data),
       }),
+    [accessToken],
+  );
+
+  const deleteProject = useCallback(
+    async (id: string) => {
+      const res = await fetchProject(`/${id}`, {
+        method: "DELETE",
+      });
+
+      toast("Project has been deleted with great success ! 💥");
+
+      return res;
+    },
     [accessToken],
   );
 
@@ -110,7 +132,9 @@ const useProjects = () => {
   return {
     getProjects,
     getProject,
+    createProject,
     editProject,
+    deleteProject,
     addProjectTask,
     deleteProjectTask,
     addProjectMember,
