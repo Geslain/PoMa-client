@@ -3,7 +3,14 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import { Button, Card, FormControl, Input, InputLabel } from "@mui/material";
+import {
+  Button,
+  Card,
+  FormControl,
+  Input,
+  InputLabel,
+  Link,
+} from "@mui/material";
 import { toast } from "react-toastify";
 
 export default function LoginPage() {
@@ -30,7 +37,10 @@ export default function LoginPage() {
 
     if (res?.error === "CredentialsSignin" && res.status === 401) {
       toast("Wrong email / password ❌");
-    } else if (res?.url) router.push(res.url);
+    } else if (res?.url) {
+      toast(`Welcome ! Make yourself at home and enjoy your time here ! 🏠🔥`);
+      router.push(res.url);
+    }
   }
 
   return (
@@ -48,13 +58,18 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit}>
           <FormControl fullWidth className={"mb-8"} required>
             <InputLabel htmlFor="email">Email</InputLabel>
-            <Input id="email" name="email" />
+            <Input id="email" name="email" type={"email"} />
           </FormControl>
           <FormControl fullWidth className={"mb-8"} required>
             <InputLabel htmlFor="password">Password</InputLabel>
             <Input id="password" name="password" type={"password"} />
           </FormControl>
-          <Button type="submit">Login</Button>
+          <Button type="submit" className={"mb-6"}>
+            Login
+          </Button>
+          <Link href={"/sign-up"} className={"text-xs flex"}>
+            No account ? Start your journey here ! 🥳
+          </Link>
         </form>
       </Card>
     </div>
