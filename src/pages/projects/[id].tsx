@@ -19,6 +19,7 @@ import AddMemberForm from "@/pages/projects/components/AddMemberForm";
 import Task from "@/types/task";
 import User from "@/types/user";
 import EditableTitle from "@/components/EditableTitle";
+import ConfirmationWrapper from "@/components/ConfirmationWrapper";
 
 export default function ProjectsPage() {
   const router = useRouter();
@@ -33,6 +34,9 @@ export default function ProjectsPage() {
     deleteProject,
   } = useProjects();
   const [project, setProject] = useState<Project>();
+  const [isAboutToDeleteMemberId, setIsAboutToDeleteMemberId] = useState("");
+  const [isAboutToDeleteTaskId, setIsAboutToDeleteTaskId] = useState("");
+  const [isAboutToDeleteProject, setIsAboutToDeleteProject] = useState(false);
 
   useEffect(() => {
     if (projectId)
@@ -53,10 +57,15 @@ export default function ProjectsPage() {
   }
 
   function handleDeleteTask(taskId: string) {
-    // TODO Add confirmation modal
-    deleteProjectTask(projectId as string, taskId).then((p) => {
-      setProject(p);
-    });
+    if (!isAboutToDeleteTaskId || isAboutToDeleteTaskId !== taskId)
+      setIsAboutToDeleteTaskId(taskId);
+
+    // Delete confirmation logic
+    if (isAboutToDeleteTaskId && isAboutToDeleteTaskId === taskId) {
+      deleteProjectTask(projectId as string, taskId).then((p) => {
+        setProject(p);
+      });
+    }
   }
 
   function handleAddMember({ _id }: Pick<User, "_id">) {
@@ -66,15 +75,19 @@ export default function ProjectsPage() {
   }
 
   function handleDeleteMember(memberId: string) {
-    // TODO Add confirmation modal
-    deleteProjectMember(projectId as string, memberId).then((p) => {
-      setProject(p);
-    });
+    if (!isAboutToDeleteMemberId || isAboutToDeleteMemberId !== memberId)
+      setIsAboutToDeleteMemberId(memberId);
+
+    // Delete confirmation logic
+    if (isAboutToDeleteMemberId && isAboutToDeleteMemberId === memberId) {
+      deleteProjectMember(projectId as string, memberId).then((p) => {
+        setProject(p);
+      });
+    }
   }
 
   const { name, owner, tasks, members } = project;
   const { firstname, lastname } = owner;
-  // List of user you can add as member : all users - members - owner
 
   function handleTitleChange(value: string) {
     editProject(projectId, { name: value }).then((p) => {
@@ -83,9 +96,28 @@ export default function ProjectsPage() {
   }
 
   function handleDelete() {
-    deleteProject(projectId).then(() => {
-      router.push("/projects");
-    });
+    if (!isAboutToDeleteProject) setIsAboutToDeleteProject(true);
+
+    // Delete confirmation logic
+    if (isAboutToDeleteProject) {
+      deleteProject(projectId).then(() => {
+        router.push("/projects");
+      });
+    }
+  }
+
+  function handleDeleteButtonMouseLeave(itemType: string) {
+    switch (itemType) {
+      case "task":
+        setIsAboutToDeleteTaskId("");
+        break;
+      case "member":
+        setIsAboutToDeleteMemberId("");
+        break;
+      case "project":
+        setIsAboutToDeleteProject(false);
+        break;
+    }
   }
 
   return (
@@ -101,23 +133,26 @@ export default function ProjectsPage() {
         </Typography>
         <Typography variant="h3">Tasks</Typography>
         <List sx={{ width: "100%" }}>
-          {tasks.map((task) => (
-            <Fragment key={task._id}>
+          {tasks.map(({ _id, name, description }) => (
+            <Fragment key={_id}>
               <ListItem
                 alignItems="flex-start"
                 secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleDeleteTask(task._id)}
+                  <ConfirmationWrapper
+                    open={isAboutToDeleteTaskId === _id}
+                    onConfirm={() => handleDeleteTask(_id)}
+                    onCancel={() => handleDeleteButtonMouseLeave("task")}
+                    text={"Are you sure ? (Press one more time to delete)"}
                   >
-                    <DeleteIcon />
-                  </IconButton>
+                    <IconButton edge="end" aria-label="delete" color={"error"}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </ConfirmationWrapper>
                 }
               >
                 <ListItemText
-                  primary={task.name}
-                  secondary={task.description}
+                  primary={name}
+                  secondary={description}
                 ></ListItemText>
               </ListItem>
               <Divider variant="inset" component="li" />
@@ -134,13 +169,16 @@ export default function ProjectsPage() {
               <ListItem
                 alignItems="flex-start"
                 secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleDeleteMember(_id)}
+                  <ConfirmationWrapper
+                    open={isAboutToDeleteMemberId === _id}
+                    onConfirm={() => handleDeleteMember(_id)}
+                    onCancel={() => handleDeleteButtonMouseLeave("member")}
+                    text={"Are you sure ? (Press one more time to delete)"}
                   >
-                    <DeleteIcon />
-                  </IconButton>
+                    <IconButton edge="end" aria-label="delete" color={"error"}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </ConfirmationWrapper>
                 }
               >
                 <ListItemText
@@ -157,14 +195,18 @@ export default function ProjectsPage() {
             />
           </ListItem>
         </List>
-        <Button
-          startIcon={<DeleteIcon />}
-          color="error"
-          className={"float-end mb-4"}
-          onClick={handleDelete}
-        >
-          Delete Project
-        </Button>
+        <div className={"flex justify-end"}>
+          <ConfirmationWrapper
+            open={isAboutToDeleteProject}
+            onConfirm={handleDelete}
+            onCancel={() => handleDeleteButtonMouseLeave("project")}
+            text={"Are you sure ? (Press one more time to delete)"}
+          >
+            <Button startIcon={<DeleteIcon />} color="error">
+              Delete Project
+            </Button>
+          </ConfirmationWrapper>
+        </div>
       </CardContent>
     </Card>
   );

@@ -59,11 +59,16 @@ const useProjects = () => {
   );
 
   const editProject = useCallback(
-    (id: string, data: Partial<Project>): Promise<Project> =>
-      fetchProject(`/${id}`, {
+    async (id: string, data: Partial<Project>): Promise<Project> => {
+      const res = await fetchProject(`/${id}`, {
         method: "PATCH",
         body: JSON.stringify(data),
-      }),
+      });
+
+      toast("Project has been updated with great success ! ✨");
+
+      return res;
+    },
     [accessToken],
   );
 
@@ -153,5 +158,4 @@ const useProjects = () => {
     deleteProjectMember,
   };
 };
-
 export default useProjects;

@@ -1,7 +1,6 @@
 import React, { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
 import { Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { toast } from "react-toastify";
 
 type Props = {
   onSubmit: (value: string) => void;
@@ -22,7 +21,6 @@ export default function EditableTitle({ text, onSubmit }: Props) {
     if (newText && newText !== text) {
       setIsOver(false);
       onSubmit(newText);
-      toast("The project has been updated with great success ! 🎉");
     }
   }
 
