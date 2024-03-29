@@ -27,14 +27,14 @@ const useProjects = () => {
     if (res.status === 404) {
       toast("This project does not exists 🙅‍");
       router.push("/projects");
-      return;
+      return null;
     }
 
     return await res.json();
   };
 
   const getProjects = useCallback(
-    () =>
+    (): Promise<Project[]> =>
       fetchProject("", {
         method: "GET",
       }),
@@ -42,7 +42,7 @@ const useProjects = () => {
   );
 
   const getProject = useCallback(
-    (id: string) =>
+    (id: string): Promise<Project> =>
       fetchProject(`/${id}`, {
         method: "GET",
       }),
@@ -50,7 +50,7 @@ const useProjects = () => {
   );
 
   const createProject = useCallback(
-    (data: Partial<Project>) =>
+    (data: Partial<Project>): Promise<Project> =>
       fetchProject("", {
         method: "POST",
         body: JSON.stringify(data),
@@ -59,7 +59,7 @@ const useProjects = () => {
   );
 
   const editProject = useCallback(
-    (id: string, data: Partial<Project>) =>
+    (id: string, data: Partial<Project>): Promise<Project> =>
       fetchProject(`/${id}`, {
         method: "PATCH",
         body: JSON.stringify(data),
@@ -68,7 +68,7 @@ const useProjects = () => {
   );
 
   const deleteProject = useCallback(
-    async (id: string) => {
+    async (id: string): Promise<Project> => {
       const res = await fetchProject(`/${id}`, {
         method: "DELETE",
       });
@@ -81,7 +81,11 @@ const useProjects = () => {
   );
 
   const addProjectTask = useCallback(
-    async (projectId: string, name: string, description: string) => {
+    async (
+      projectId: string,
+      name: string,
+      description: string,
+    ): Promise<Project> => {
       const res = await fetchProject(`/${projectId}/tasks`, {
         method: "POST",
         body: JSON.stringify({
@@ -97,7 +101,7 @@ const useProjects = () => {
   );
 
   const deleteProjectTask = useCallback(
-    async (projectId: string, taskId: string) => {
+    async (projectId: string, taskId: string): Promise<Project> => {
       const res = await fetchProject(`/${projectId}/tasks/${taskId}`, {
         method: "DELETE",
       });
@@ -110,7 +114,7 @@ const useProjects = () => {
   );
 
   const addProjectMember = useCallback(
-    async (projectId: string, memberId: string) => {
+    async (projectId: string, memberId: string): Promise<Project> => {
       const res = await fetchProject(`/${projectId}/members`, {
         method: "POST",
         body: JSON.stringify({
@@ -125,7 +129,7 @@ const useProjects = () => {
   );
 
   const deleteProjectMember = useCallback(
-    async (projectId: string, memberId: string) => {
+    async (projectId: string, memberId: string): Promise<Project> => {
       const res = await fetchProject(`/${projectId}/members/${memberId}`, {
         method: "DELETE",
       });
