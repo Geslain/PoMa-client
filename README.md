@@ -1,36 +1,65 @@
+# 54q4r4 Client
+
+![Saqara Logo](https://cdn.jaimelesstartups.fr/wp-content/uploads/2021/09/Logo-Saqara-1500x535.jpg
+"Saqara Logo")
+## Description
+
+54q4r4 Client of [54q4r4](https://github.com/Geslain/54q4r4-api) project.
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+### Features (What to expect)
 
-First, run the development server:
+The app contains the following features
+* Login / Sign-up
+* Projects CRUD (👋 Don't forget to try the "Inline" edit for project title, just click on it in project page !)
+* Users CRUD (👋 Don't forget to try the "Inline" edit for users, just click on user row in user list !)
+
+### TODO (What not to expect)
+
+Some missing features are:
+* Unit tests
+* e2e test
+* More code documentation
+
+## Installation
+
+Please refer to [54q4r4](https://github.com/Geslain/54q4r4-api) Readme file for install. This app is meant to be used with [docker](https://www.docker.com/).
+But still, for development purpose you can install with the following command:
 
 ```bash
-npm run dev
+$ cp .env.template .env # Copy env variables
+$ yarn install
+```
+
+## Running the app
+
+if you don't want to use docker, you can start the app with the following command
+
+```bash
+# development
+$ npm run dev
 # or
-yarn dev
+$ yarn dev
 # or
-pnpm dev
+$ pnpm dev
 # or
-bun dev
+$ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Development
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+The ensure a clean and normalized development process, commit hooks have been settled on this project. You can find it in the `.husky` directory
 
-## Learn More
+Following tools are used:
+* [husky](https://typicode.github.io/husky/)
+* [commitlint](https://commitlint.js.org/)
+* [commitizen](https://commitizen-tools.github.io/commitizen/)
 
-To learn more about Next.js, take a look at the following resources:
+In addition, every time you commit, code is formatted, linted, and unit and e2e tests are launched.
+**This also means that docker must be running in order to be able to commit.**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This project is [MIT licensed](LICENSE).
