@@ -38,7 +38,6 @@ export default function ProjectsPage() {
   }
 
   function handleSubmit(name: string) {
-    console.log(name);
     createProject({ name }).then((p) => {
       router.push(`/projects/${p._id}`);
     });
