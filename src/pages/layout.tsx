@@ -35,20 +35,24 @@ export default function Layout({ children }: { children: ReactNode }) {
               </div>
               <ul className="flex flex-col overflow-hidden">
                 <li className={"my-2 flex"}>
-                  <Button
-                    startIcon={<FolderIcon />}
-                    className="flex-grow justify-start"
-                  >
-                    <Link href={"/projects"}>Projects</Link>
-                  </Button>
+                  <Link href={"/projects"} className="flex-grow justify-start">
+                    <Button
+                      startIcon={<FolderIcon />}
+                      className="w-full justify-start p-2"
+                    >
+                      Projects
+                    </Button>
+                  </Link>
                 </li>
                 <li className={"my-2 flex"}>
-                  <Button
-                    startIcon={<GroupIcon />}
-                    className="flex-grow justify-start"
-                  >
-                    <Link href={"/users"}>Users</Link>
-                  </Button>
+                  <Link href={"/users"} className="flex-grow justify-start">
+                    <Button
+                      startIcon={<GroupIcon />}
+                      className="w-full justify-start p-2"
+                    >
+                      Users
+                    </Button>
+                  </Link>
                 </li>
               </ul>
             </div>
