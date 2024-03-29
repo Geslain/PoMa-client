@@ -33,7 +33,8 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/login", //Need to define custom login page (if using)
+    signIn: "/login",
+    newUser: "/sign-up",
   },
   callbacks: {
     async jwt({ token, user }) {
