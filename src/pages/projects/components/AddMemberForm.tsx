@@ -25,7 +25,7 @@ export default function AddMemberForm({ onSubmit, existingMembers }: Props) {
     getUsers().then((u) => {
       if (u) setUsers(u);
     });
-  }, []);
+  }, [getUsers]);
 
   function handleMemberChange(e: SelectChangeEvent) {
     setMember(e.target.value);
@@ -43,6 +43,7 @@ export default function AddMemberForm({ onSubmit, existingMembers }: Props) {
     }
   }
 
+  // List of user you can add as member : all users - members - owner
   const addableMembers =
     users?.filter(
       (u) => !existingMembers.map((m) => m._id).find((id) => id === u._id),

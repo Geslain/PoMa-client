@@ -64,6 +64,8 @@ export default function ProjectsPage() {
               <TableCell align="left">Owner</TableCell>
               <TableCell align="left">Tasks</TableCell>
               <TableCell align="left">Members</TableCell>
+              <TableCell align="left">Created at</TableCell>
+              <TableCell align="left">Updated at</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -76,8 +78,10 @@ export default function ProjectsPage() {
               >
                 <TableCell align="left">{project.name}</TableCell>
                 <TableCell align="left">{`${project.owner.firstname} ${project.owner.lastname}`}</TableCell>
-                <TableCell align="left">{project.tasks.length}</TableCell>
-                <TableCell align="left">{project.members.length}</TableCell>
+                <TableCell align="center">{project.tasks.length}</TableCell>
+                <TableCell align="center">{project.members.length}</TableCell>
+                <TableCell align="left">{project.createdAt}</TableCell>
+                <TableCell align="left">{project.updatedAt}</TableCell>
               </TableRow>
             ))}
           </TableBody>

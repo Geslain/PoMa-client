@@ -74,7 +74,6 @@ export default function ProjectsPage() {
 
   const { name, owner, tasks, members } = project;
   const { firstname, lastname } = owner;
-  // List of user you can add as member : all users - members - owner
 
   function handleTitleChange(value: string) {
     editProject(projectId, { name: value }).then((p) => {
