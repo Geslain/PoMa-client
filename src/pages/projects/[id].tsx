@@ -153,6 +153,9 @@ export default function ProjectsPage() {
                 <ListItemText
                   primary={name}
                   secondary={description}
+                  secondaryTypographyProps={{
+                    className: "whitespace-pre-line",
+                  }}
                 ></ListItemText>
               </ListItem>
               <Divider variant="inset" component="li" />
