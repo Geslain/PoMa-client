@@ -20,6 +20,7 @@ import React, {
 import User from "@/types/user";
 import useUsers from "@/hooks/useUsers";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ConfirmationWrapper from "@/components/ConfirmationWrapper";
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -28,6 +29,7 @@ export default function UsersPage() {
   const [editedUser, setEditedUser] = useState<User>();
   const firstnameInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const [isAboutToDeleteUserId, setIsAboutToDeleteUserId] = useState("");
 
   useEffect(() => {
     getUsers().then((u) => {
@@ -96,14 +98,26 @@ export default function UsersPage() {
   }
 
   async function handleDelete(id: string) {
-    const res = await deleteUser(id);
+    // If "want to delete" user is different, update isAboutToDeleteUserId
+    if (!isAboutToDeleteUserId || isAboutToDeleteUserId !== id)
+      setIsAboutToDeleteUserId(id);
 
-    setUsers((u) =>
-      u.reduce<User[]>((acc, curr) => {
-        if (curr._id === res._id) return acc;
-        return [...acc, curr];
-      }, []),
-    );
+    // Delete confirmation logic
+    if (isAboutToDeleteUserId && isAboutToDeleteUserId === id) {
+      const res = await deleteUser(id);
+
+      setUsers((u) =>
+        u.reduce<User[]>((acc, curr) => {
+          if (curr._id === res._id) return acc;
+          return [...acc, curr];
+        }, []),
+      );
+      setIsAboutToDeleteUserId("");
+    }
+  }
+
+  function handleDeleteButtonMouseLeave() {
+    setIsAboutToDeleteUserId("");
   }
 
   return (
@@ -169,12 +183,16 @@ export default function UsersPage() {
                   <TableCell align="left">{user.createdAt}</TableCell>
                   <TableCell align="left">{user.updatedAt}</TableCell>
                   <TableCell align="left">
-                    <IconButton
-                      onClick={() => handleDelete(user._id)}
-                      color={"error"}
+                    <ConfirmationWrapper
+                      open={isAboutToDeleteUserId === user._id}
+                      onConfirm={() => handleDelete(user._id)}
+                      onCancel={handleDeleteButtonMouseLeave}
+                      text={"Are you sure ? (Press one more time to delete)"}
                     >
-                      <DeleteIcon />
-                    </IconButton>
+                      <IconButton color={"error"} aria-label="delete">
+                        <DeleteIcon />
+                      </IconButton>
+                    </ConfirmationWrapper>
                   </TableCell>
                 </TableRow>
               ))}
