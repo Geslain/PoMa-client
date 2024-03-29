@@ -26,7 +26,6 @@ export default function SignInPage() {
     const password = formData.get("password");
     const passwordConfirmation = formData.get("passwordConfirmation");
 
-    console.log(passwordConfirmation, password);
     if (password !== passwordConfirmation) {
       setIsPasswordDifferent(true);
       return;
