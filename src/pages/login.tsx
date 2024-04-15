@@ -50,9 +50,7 @@ export default function LoginPage() {
           alt={"Logo"}
           width={400}
           height={200}
-          src={
-            "https://cdn.jaimelesstartups.fr/wp-content/uploads/2021/09/Logo-Saqara.jpg"
-          }
+          src={"https://github.com/Geslain/PoMa/blob/main/logo.png?raw=true"}
           className={"m-auto"}
         />
         <form onSubmit={handleSubmit}>

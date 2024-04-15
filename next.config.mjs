@@ -5,9 +5,9 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "cdn.jaimelesstartups.fr",
+        hostname: "https://github.com",
         port: "",
-        pathname: "/**",
+        pathname: "/Geslain/PoMa/**",
       },
     ],
   },

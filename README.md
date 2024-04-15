@@ -1,10 +1,9 @@
-# 54q4r4 Client
+# PoMa Client
 
-![Saqara Logo](https://cdn.jaimelesstartups.fr/wp-content/uploads/2021/09/Logo-Saqara-1500x535.jpg
-"Saqara Logo")
+![PoMa Logo](https://github.com/Geslain/PoMa/blob/main/logo.png?raw=true "PoMa Logo")
 ## Description
 
-54q4r4 Client of [54q4r4](https://github.com/Geslain/54q4r4-api) project.
+PoMa Client of [PoMa](https://github.com/Geslain/PoMa-api) project.
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ### Features (What to expect)
@@ -23,7 +22,7 @@ Some missing features are:
 
 ## Installation
 
-Please refer to [54q4r4](https://github.com/Geslain/54q4r4-api) Readme file for install. This app is meant to be used with [docker](https://www.docker.com/).
+Please refer to [PoMa](https://github.com/Geslain/PoMa-api) Readme file for install. This app is meant to be used with [docker](https://www.docker.com/).
 But still, for development purpose you can install with the following command:
 
 ```bash
