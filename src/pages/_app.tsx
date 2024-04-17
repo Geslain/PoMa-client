@@ -2,9 +2,10 @@ import { SessionProvider } from "next-auth/react";
 import { AppProps } from "next/app";
 import Layout from "@/pages/layout";
 import { ReactNode } from "react";
-import "./globals.css";
 import { Bounce, ToastContainer } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
+import "./globals.css";
 
 export default function App({
   Component,
