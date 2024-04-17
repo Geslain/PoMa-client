@@ -35,8 +35,14 @@ export default function LoginPage() {
       redirect: false,
     });
 
-    if (res?.error === "CredentialsSignin" && res.status === 401) {
-      toast("Wrong email / password ❌");
+    if (res?.error) {
+      switch (res.error) {
+        case "CredentialsSignIn":
+          toast("Wrong email / password ❌");
+          break;
+        default:
+          toast("Something wrong happened", { type: "error" });
+      }
     } else if (res?.url) {
       toast(`Welcome ! Make yourself at home and enjoy your time here ! 🏠🔥`);
       router.push(res.url);
