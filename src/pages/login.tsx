@@ -45,13 +45,13 @@ export default function LoginPage() {
 
   return (
     <div className={"h-full w-full flex"}>
-      <Card className={"w-1/3 p-8 m-auto"}>
+      <Card className={"p-8 m-auto"}>
         <Image
           alt={"Logo"}
           width={400}
           height={200}
           src={"https://github.com/Geslain/PoMa/blob/main/logo.png?raw=true"}
-          className={"m-auto"}
+          className={"mb-4 rounded-md"}
         />
         <form onSubmit={handleSubmit}>
           <FormControl fullWidth className={"mb-8"} required>
