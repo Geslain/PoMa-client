@@ -16,4 +16,6 @@ export default {
     },
   },
   providers: [],
+  secret: "a-test-secret",
+  trustHost: true,
 } satisfies NextAuthConfig;

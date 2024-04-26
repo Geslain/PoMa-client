@@ -9,7 +9,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import React, { useEffect, useState } from "react";
 import User from "@/types/user";
-import useUsers from "@/hooks/useUsers";
+import { getMany } from "@/lib/actions/users";
 
 type Props = {
   onSubmit: (data: Pick<User, "_id">) => void;
@@ -18,14 +18,16 @@ type Props = {
 export default function AddMemberForm({ onSubmit, existingMembers }: Props) {
   const [member, setMember] = useState("");
   const [users, setUsers] = useState<User[]>();
-  const { getUsers } = useUsers();
   const [formErrors, setFormErrors] = useState({ member: false });
 
   useEffect(() => {
-    getUsers().then((u) => {
-      if (u) setUsers(u);
-    });
-  }, [getUsers]);
+    async function getUsers() {
+      const users = await getMany();
+      setUsers(users);
+    }
+
+    getUsers();
+  }, []);
 
   function handleMemberChange(e: SelectChangeEvent) {
     setMember(e.target.value);

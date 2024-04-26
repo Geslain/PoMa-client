@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Button,
   Card,
@@ -9,100 +11,93 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import useProjects from "@/hooks/useProjects";
-import React, { Fragment, useEffect, useState } from "react";
-import Project from "@/types/project";
-import { useRouter } from "next/router";
+import React, { Fragment, useState } from "react";
+import ProjectType from "@/types/project";
+import { useRouter } from "next/navigation";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddTaskForm from "@/pages/projects/components/AddTaskForm";
-import AddMemberForm from "@/pages/projects/components/AddMemberForm";
+import AddTaskForm from "./AddTaskForm";
+import AddMemberForm from "./AddMemberForm";
 import Task from "@/types/task";
 import User from "@/types/user";
 import EditableTitle from "@/components/EditableTitle";
 import ConfirmationWrapper from "@/components/ConfirmationWrapper";
+import {
+  addTask,
+  removeTask,
+  addMember,
+  removeMember,
+  edit,
+  remove,
+} from "@/lib/actions/projects";
+import { toast } from "react-toastify";
 
-export default function ProjectsPage() {
+type Props = {
+  data: ProjectType;
+  projectId: string;
+};
+
+export default function Project({ data, projectId }: Props) {
   const router = useRouter();
-  const projectId = router?.query?.id as string;
-  const {
-    getProject,
-    addProjectTask,
-    deleteProjectTask,
-    addProjectMember,
-    deleteProjectMember,
-    editProject,
-    deleteProject,
-  } = useProjects();
-  const [project, setProject] = useState<Project>();
+  const [project, setProject] = useState(data);
   const [isAboutToDeleteMemberId, setIsAboutToDeleteMemberId] = useState("");
   const [isAboutToDeleteTaskId, setIsAboutToDeleteTaskId] = useState("");
   const [isAboutToDeleteProject, setIsAboutToDeleteProject] = useState(false);
 
-  useEffect(() => {
-    if (projectId)
-      getProject(projectId).then((p) => {
-        if (p) setProject(p);
-      });
-  }, [getProject, projectId]);
-
   if (!project) return null;
 
-  function handleAddTask({
-    name,
-    description,
-  }: Pick<Task, "name" | "description">) {
-    addProjectTask(projectId as string, name, description).then((p) => {
-      setProject(p);
-    });
+  async function handleAddTask(data: Pick<Task, "name" | "description">) {
+    const project = await addTask(projectId as string, data);
+    toast("Task has been added with great success ! 🦄");
+    setProject(project);
   }
 
-  function handleDeleteTask(taskId: string) {
+  async function handleDeleteTask(taskId: string) {
     if (!isAboutToDeleteTaskId || isAboutToDeleteTaskId !== taskId)
       setIsAboutToDeleteTaskId(taskId);
 
-    // Delete confirmation logic
+    // Delete confirmation's logic
     if (isAboutToDeleteTaskId && isAboutToDeleteTaskId === taskId) {
-      deleteProjectTask(projectId as string, taskId).then((p) => {
-        setProject(p);
-      });
+      const project = await removeTask(projectId as string, taskId);
+      toast("Task has been deleted with great success ! 💥");
+      setProject(project);
     }
   }
 
-  function handleAddMember({ _id }: Pick<User, "_id">) {
-    addProjectMember(projectId as string, _id).then((p) => {
-      setProject(p);
-    });
+  async function handleAddMember(data: Pick<User, "_id">) {
+    const project = await addMember(projectId as string, data);
+    toast("Member has been added with great success ! 👩‍🦰/🧑‍🦰");
+    setProject(project);
   }
 
-  function handleDeleteMember(memberId: string) {
+  async function handleDeleteMember(memberId: string) {
     if (!isAboutToDeleteMemberId || isAboutToDeleteMemberId !== memberId)
       setIsAboutToDeleteMemberId(memberId);
 
     // Delete confirmation logic
     if (isAboutToDeleteMemberId && isAboutToDeleteMemberId === memberId) {
-      deleteProjectMember(projectId as string, memberId).then((p) => {
-        setProject(p);
-      });
+      const project = await removeMember(projectId as string, memberId);
+      setProject(project);
+      toast("Member has been deleted with great success ! 👋");
     }
   }
 
   const { name, owner, tasks, members } = project;
   const { firstname, lastname } = owner;
 
-  function handleTitleChange(value: string) {
-    editProject(projectId, { name: value }).then((p) => {
-      setProject(p);
-    });
+  async function handleTitleChange(value: string) {
+    const project = await edit(projectId, { name: value });
+    toast("Project has been updated with great success ! ✨");
+    setProject(project);
   }
 
-  function handleDelete() {
+  async function handleDelete() {
     if (!isAboutToDeleteProject) setIsAboutToDeleteProject(true);
 
     // Delete confirmation logic
     if (isAboutToDeleteProject) {
-      deleteProject(projectId).then(() => {
-        router.push("/projects");
-      });
+      await remove(projectId);
+      toast("Project has been deleted with great success ! 💥");
+      router.push("/projects");
     }
   }
 

@@ -13,8 +13,15 @@ export default auth((req) => {
   if (isPublicRoute && isAuthenticated)
     return Response.redirect(new URL(DEFAULT_REDIRECT, nextUrl));
 
-  if (!isAuthenticated && !isPublicRoute)
-    return Response.redirect(new URL(ROOT, nextUrl));
+  if (!isAuthenticated && !isPublicRoute) {
+    let url = ROOT;
+
+    if (!PUBLIC_ROUTES.includes(nextUrl.pathname) && nextUrl.pathname !== "/") {
+      url = url.concat(`?callbackUrl=${nextUrl.pathname}`);
+    }
+
+    return Response.redirect(new URL(url, nextUrl));
+  }
 });
 
 export const config = {

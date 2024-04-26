@@ -17,13 +17,7 @@
 }
 
 body,
-#__next {
+#__next, main {
   color: black;
   height: 100vh;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
 }

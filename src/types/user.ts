@@ -5,3 +5,7 @@ export default interface User extends Entity {
   lastname: string;
   email: string;
 }
+
+export type Signup = Pick<User, "firstname" | "lastname" | "email"> & {
+  password: string;
+};

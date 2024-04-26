@@ -1,9 +1,10 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import fetchDataApi from "@/helpers/fetchDataApi";
+import fetchData from "@/lib/fetchData";
 import authConfig from "./auth.config";
+import User from "@/types/user";
 
-export const { handlers } = NextAuth({
+export const { signOut, signIn, auth, handlers } = NextAuth({
   ...authConfig,
   providers: [
     CredentialsProvider({
@@ -13,13 +14,13 @@ export const { handlers } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const res = await fetchDataApi("/auth/login", {
+        const { accessToken, user } = await fetchData<{
+          accessToken: string;
+          user: User;
+        }>("/auth/login", {
           method: "POST",
-          body: JSON.stringify(credentials),
-          headers: { "Content-Type": "application/json" },
+          body: credentials,
         });
-
-        const { accessToken, user } = await res.json();
 
         if (!user) {
           return null;

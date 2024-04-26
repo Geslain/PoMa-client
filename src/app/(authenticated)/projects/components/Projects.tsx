@@ -1,3 +1,6 @@
+"use client";
+
+import React, { useState } from "react";
 import {
   Button,
   Paper,
@@ -7,27 +10,23 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from "@mui/material";
-import useProjects from "@/hooks/useProjects";
-import React, { useEffect, useState } from "react";
 import Project from "@/types/project";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import AddIcon from "@mui/icons-material/Add";
-import NewProjectModal from "@/pages/projects/components/NewProjectModal";
+import NewProjectModal from "./NewProjectModal";
+import { create } from "@/lib/actions/projects";
+import { toast } from "react-toastify";
 
-export default function ProjectsPage() {
-  const { getProjects, createProject } = useProjects();
+type Props = {
+  data: Project[];
+};
+
+export default function Projects({ data = [] }: Props) {
   const router = useRouter();
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects] = useState(data);
   // State of modal
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    getProjects().then((p) => {
-      if (p) setProjects(p);
-    });
-  }, [getProjects]);
 
   function handleRowClick(id: string) {
     router.push(`/projects/${id}`);
@@ -37,11 +36,12 @@ export default function ProjectsPage() {
     setIsOpen(false);
   }
 
-  function handleSubmit(name: string) {
-    createProject({ name }).then((p) => {
-      router.push(`/projects/${p._id}`);
-    });
+  async function handleSubmit(name: string) {
+    const project = await create({ name });
+
     setIsOpen(false);
+    toast("Project has been updated with great success ! ✨");
+    router.push(`/projects/${project._id}`);
   }
 
   function handleClick() {
@@ -50,9 +50,6 @@ export default function ProjectsPage() {
 
   return (
     <>
-      <Typography variant="h1" gutterBottom>
-        Projects
-      </Typography>
       <Button startIcon={<AddIcon />} onClick={handleClick}>
         Create project
       </Button>
@@ -72,7 +69,7 @@ export default function ProjectsPage() {
             {projects.map((project) => (
               <TableRow
                 hover
-                key={project.name}
+                key={project._id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 onClick={() => handleRowClick(project._id)}
               >

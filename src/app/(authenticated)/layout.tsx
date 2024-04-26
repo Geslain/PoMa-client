@@ -1,17 +1,15 @@
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
+import Image from "next/image";
+import { auth } from "@/auth";
 import { Button } from "@mui/material";
 import FolderIcon from "@mui/icons-material/Folder";
 import GroupIcon from "@mui/icons-material/Group";
-import PersonIcon from "@mui/icons-material/Person";
+import LogoutButton from "@/components/LogoutButton";
+import { DEFAULT_REDIRECT } from "@/lib/routes";
 
-export default function Layout({ children }: { children: ReactNode }) {
-  const session = useSession();
-
-  async function logout() {
-    await signOut();
-  }
+export default async function Layout({ children }: { children: ReactNode }) {
+  const session = await auth();
 
   return (
     <>
@@ -19,36 +17,37 @@ export default function Layout({ children }: { children: ReactNode }) {
         <div className="flex flex-row flex-wrap h-full">
           <aside className="w-full h-full sm:w-1/3 md:w-1/4 px-2 shadow">
             <div className="sticky top-0 p-4 w-full">
-              <div className={"flex justify-between"}>
+              <div className={"flex justify-between mb-8"}>
                 <span className={"flex items-center"}>
-                  <PersonIcon className={"mr-2"} />
-                  {session.data?.user?.name}
+                  <Link href={DEFAULT_REDIRECT}>
+                    <Image
+                      alt={"logo"}
+                      src="/logo-simple.png"
+                      className={"mr-2"}
+                      width={45}
+                      height={45}
+                    />
+                  </Link>
+                  {session?.user?.name}
                 </span>
-                <button
-                  onClick={logout}
-                  className={
-                    "px-3 py-1 m-2 rounded-md bg-indigo-600 text-white"
-                  }
-                >
-                  Logout
-                </button>
+                <LogoutButton />
               </div>
               <ul className="flex flex-col overflow-hidden">
                 <li className={"my-2 flex"}>
-                  <Link href={"/projects"} className="flex-grow justify-start">
+                  <Link href={"/projects"} className="flex flex-grow">
                     <Button
                       startIcon={<FolderIcon />}
-                      className="w-full justify-start p-2"
+                      className="flex flex-grow justify-start p-2"
                     >
                       Projects
                     </Button>
                   </Link>
                 </li>
-                <li className={"my-2 flex"}>
-                  <Link href={"/users"} className="flex-grow justify-start">
+                <li className={"my-2  flex"}>
+                  <Link href={"/users"} className="flex flex-grow">
                     <Button
                       startIcon={<GroupIcon />}
-                      className="w-full justify-start p-2"
+                      className="flex flex-grow justify-start p-2"
                     >
                       Users
                     </Button>
@@ -57,12 +56,12 @@ export default function Layout({ children }: { children: ReactNode }) {
               </ul>
             </div>
           </aside>
-          <main
+          <div
             role="main"
             className="container w-full sm:w-2/3 md:w-3/4 p-8 overflow-scroll h-full"
           >
             {children}
-          </main>
+          </div>
         </div>
       </div>
       <footer className="mt-auto"></footer>
