@@ -40,3 +40,7 @@ next-env.d.ts
 
 # Env file
 .env
+
+# Playwright tests logs
+test-results
+playwright-report

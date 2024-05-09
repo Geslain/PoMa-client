@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky",
-    "test": "echo 'no test yet' && exit 0"
+    "test": "echo 'no test yet' && exit 0",
+    "test:e2e": "playwright test --trace on",
+    "show-report": "playwright show-report"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -25,6 +27,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.2.0",
     "@commitlint/config-conventional": "^19.1.0",
+    "@playwright/test": "^1.43.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
